@@ -1,5 +1,10 @@
 const http = require('http');
 
+// ===== CONFIGURATION =====
+// Change this URL to your XSS receiver server (e.g., your deployed server or localhost)
+const RECEIVER_URL = 'http://example.com:3333';
+// =========================
+
 const server = http.createServer((req, res) => {
   const html = `
 <!DOCTYPE html>
@@ -170,7 +175,7 @@ const server = http.createServer((req, res) => {
     <div class="section">
       <h2>Send Data to Receiver</h2>
       <label>Receiver URL:</label>
-      <input type="text" id="receiverUrl" value="http://example.com:3333">
+      <input type="text" id="receiverUrl" value="${RECEIVER_URL}">
       <br><br>
       <label>Custom Data (optional):</label>
       <textarea id="customData" placeholder="Additional data to send..."></textarea>

